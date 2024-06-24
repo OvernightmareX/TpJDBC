@@ -5,21 +5,18 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
+import static org.example.Constants.*;
+
 public class EtudiantIHM {
-    private static final String url = "jdbc:postgresql://localhost:5432/postgres?currentSchema=exo1_jdbc";
-    private static final String username = "postgres";
-    private static final String password = "test";
 
     private static Connection connection = null;
-    private static Statement st = null;
-    private static ResultSet rs = null;
 
-    public static void StartEtudiantManager() throws SQLException {
+    public static void StartStudentManager() throws SQLException {
         int userChoice;
 
         do{
             displayMainMenu();
-            userChoice = userChoice(0,4);
+            userChoice = userChoice(0,MAX_MAIN_MENU_CHOICE);
 
             switch (userChoice){
                 case 1 -> loadStudents(TypeStudentLoading.ALL);
@@ -49,7 +46,7 @@ public class EtudiantIHM {
         System.out.print("Veuillez entrer le prenom de l'étudiant : ");
         student.setPrenom(userNameInput());
         System.out.print("Veuillez entrer le numéro de sa classe. ");
-        student.setNumeroDeClasse(userChoice(0,10));
+        student.setNumeroDeClasse(userChoice(MIN_STUDENT_CLASS_NUMBER,MAX_STUDENT_CLASS_NUMBER));
         System.out.println("Veuillez entrer la date de diplome.");
         student.setDateDiplome(userDateInput());
 
@@ -64,12 +61,12 @@ public class EtudiantIHM {
 
     public static void loadStudents(TypeStudentLoading type){
         String request;
-
+        Statement st;
+        ResultSet rs;
         try {
-            connection = DriverManager.getConnection(url, username, password);
+            connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             if(connection != null){
                 System.out.println("La connexion est ok");
-
             }else {
                 System.out.println("Connexion échoué");
             }
@@ -78,7 +75,7 @@ public class EtudiantIHM {
                 case ALL -> "SELECT * FROM etudiant";
                 case BY_CLASS -> {
                     System.out.println("Veuillez entrer le numero de la classe. ");
-                    yield "SELECT * FROM etudiant WHERE numero_de_classe = " + userChoice(0, 10);
+                    yield "SELECT * FROM etudiant WHERE numero_de_classe = " + userChoice(MIN_STUDENT_CLASS_NUMBER, MAX_STUDENT_CLASS_NUMBER);
                 }
             };
 
@@ -105,7 +102,7 @@ public class EtudiantIHM {
 
     public static void deleteStudent(int id) throws SQLException {
         PreparedStatement pst;
-        connection = DriverManager.getConnection(url, username, password);
+        connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         pst = connection.prepareStatement("DELETE FROM etudiant WHERE etudiant_id = ?");
         pst.setInt(1, id);
 
@@ -118,7 +115,7 @@ public class EtudiantIHM {
 
     private static void saveEtudiant(Etudiant student) throws SQLException {
         PreparedStatement pst;
-        connection = DriverManager.getConnection(url, username, password);
+        connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         pst = connection.prepareStatement("INSERT INTO etudiant (nom, prenom, date_diplome,numero_de_classe) VALUES (?,?,?,?)");
 
         pst.setString(1, student.getNom());
@@ -136,22 +133,21 @@ public class EtudiantIHM {
 
     public static String userNameInput(){
         Scanner sc = new Scanner(System.in);
-        return sc.nextLine();
+        String name = sc.nextLine();
+        return name.trim();
     }
 
     public static LocalDate userDateInput(){
-        int day = 0;
-        int month = 0;
-        int year = 0;
-
-        Scanner sc = new Scanner(System.in);
+        int day;
+        int month;
+        int year;
 
         System.out.print("Veuillez enter le jour. ");
-        day = userChoice(0,31);
+        day = userChoice(MIN_DAY_DATE,MAX_DAY_DATE);
         System.out.print("Veuillez enter le mois. ");
-        month = userChoice(0,12);
+        month = userChoice(MIN_MONTH_DATE,MAX_MONTH_DATE);
         System.out.print("Veuillez enter l'année. ");
-        year = userChoice(1800,2050);
+        year = userChoice(MIN_YEAR_DATE,MAX_YEAR_DATE);
 
         return LocalDate.of(year,month,day);
     }
