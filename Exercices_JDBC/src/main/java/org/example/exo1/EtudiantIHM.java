@@ -1,11 +1,11 @@
-package org.example;
+package org.example.exo1;
 
 import java.sql.*;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.example.Constants.*;
+import static org.example.exo1.Constants.*;
 
 public class EtudiantIHM {
 
@@ -50,7 +50,7 @@ public class EtudiantIHM {
         System.out.println("Veuillez entrer la date de diplome.");
         student.setDateDiplome(userDateInput());
 
-        saveEtudiant(student);
+        saveStudent(student);
     }
 
     public static void displayDeleteStudent() throws SQLException {
@@ -60,9 +60,17 @@ public class EtudiantIHM {
     }
 
     public static void loadStudents(TypeStudentLoading type){
-        String request;
         Statement st;
         ResultSet rs;
+
+        String request = switch (type) {
+            case ALL -> "SELECT * FROM etudiant";
+            case BY_CLASS -> {
+                System.out.println("Veuillez entrer le numero de la classe. ");
+                yield "SELECT * FROM etudiant WHERE numero_de_classe = " + userChoice(MIN_STUDENT_CLASS_NUMBER, MAX_STUDENT_CLASS_NUMBER);
+            }
+        };
+
         try {
             connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
             if(connection != null){
@@ -70,14 +78,6 @@ public class EtudiantIHM {
             }else {
                 System.out.println("Connexion échoué");
             }
-
-            request = switch (type) {
-                case ALL -> "SELECT * FROM etudiant";
-                case BY_CLASS -> {
-                    System.out.println("Veuillez entrer le numero de la classe. ");
-                    yield "SELECT * FROM etudiant WHERE numero_de_classe = " + userChoice(MIN_STUDENT_CLASS_NUMBER, MAX_STUDENT_CLASS_NUMBER);
-                }
-            };
 
             st = connection.createStatement();
             rs = st.executeQuery(request);
@@ -113,7 +113,7 @@ public class EtudiantIHM {
         connection.close();
     }
 
-    private static void saveEtudiant(Etudiant student) throws SQLException {
+    private static void saveStudent(Etudiant student) throws SQLException {
         PreparedStatement pst;
         connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
         pst = connection.prepareStatement("INSERT INTO etudiant (nom, prenom, date_diplome,numero_de_classe) VALUES (?,?,?,?)");

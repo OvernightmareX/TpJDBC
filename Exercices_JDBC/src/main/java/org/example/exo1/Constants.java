@@ -1,4 +1,4 @@
-package org.example;
+package org.example.exo1;
 
 public final class Constants {
     static final String URL = "jdbc:postgresql://localhost:5432/postgres?currentSchema=exo1_jdbc";

@@ -1,4 +1,4 @@
-package org.example;
+package org.example.exo1;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
