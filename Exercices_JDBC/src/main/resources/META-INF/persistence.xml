@@ -5,10 +5,13 @@
 
     <persistence-unit name="jpa">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>org.example.demoHibernate.Entity.Computer</class>
+        <class>org.example.exo3.entity.Ticket</class>
+        <class>org.example.exo3.entity.Address</class>
+        <class>org.example.exo3.entity.Event</class>
+        <class>org.example.exo3.entity.Client</class>
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres?currentSchema=exo2_jdbc"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres?currentSchema=exo3_jdbc"/>
             <property name="javax.persistence.jdbc.user" value="postgres"/>
             <property name="javax.persistence.jdbc.password" value="test"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
