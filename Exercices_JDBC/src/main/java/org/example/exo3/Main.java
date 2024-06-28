@@ -1,6 +1,6 @@
 package org.example.exo3;
 
-import org.example.exo3.utils.TicketingIHM;
+import org.example.exo3.controllers.TicketingIHM;
 
 import java.sql.SQLException;
 

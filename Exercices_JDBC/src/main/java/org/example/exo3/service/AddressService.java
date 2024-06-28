@@ -2,7 +2,7 @@ package org.example.exo3.service;
 
 import org.example.exo3.entity.Address;
 
-import static org.example.exo3.utils.TicketingIHM.userStringInput;
+import static org.example.exo3.controllers.TicketingIHM.userStringInput;
 
 public class AddressService {
     public static Address createAdress(){

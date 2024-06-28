@@ -13,7 +13,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.example.exo3.service.AddressService.createAdress;
-import static org.example.exo3.utils.TicketingIHM.*;
+import static org.example.exo3.controllers.TicketingIHM.*;
 
 public class EventService {
     public static Event selectEvent(EntityManager em){

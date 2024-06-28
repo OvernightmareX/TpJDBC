@@ -11,7 +11,7 @@ import java.util.List;
 import static org.example.exo3.constants.Constants.MAX_CLIENT_AGE;
 import static org.example.exo3.constants.Constants.MIN_CLIENT_AGE;
 import static org.example.exo3.service.AddressService.createAdress;
-import static org.example.exo3.utils.TicketingIHM.*;
+import static org.example.exo3.controllers.TicketingIHM.*;
 
 public class ClientService {
     public static Client selectClient(EntityManager em){
