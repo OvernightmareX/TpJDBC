@@ -7,5 +7,6 @@
         <mapping class="org.example.entities.ElectronicArticle"/>
         <mapping class="org.example.entities.FashionArticle"/>
         <mapping class="org.example.entities.FoodArticle"/>
+        <mapping class="org.example.entities.Client"/>
     </session-factory>
 </hibernate-configuration>

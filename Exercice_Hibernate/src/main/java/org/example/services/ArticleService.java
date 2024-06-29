@@ -48,7 +48,7 @@ public class ArticleService {
             return;
 
         do {
-            System.out.println("=== Selected article infos ===");
+            System.out.println("\n=== Selected article infos ===");
             displayBaseArticleModificationMenu(articleSelected);
             displaySpecificArticleModificationMenu(articleSelected);
             System.out.println("0. Quit modifications\n");
@@ -63,7 +63,6 @@ public class ArticleService {
 
     public void deleteArticle(){
         System.out.println("=== Article modification ===\n");
-        int userInput;
 
         displayAllArticles();
 
@@ -76,7 +75,8 @@ public class ArticleService {
 
     public void displayArticleByID(){
         Article article = selectArticleByID();
-        System.out.println(article);
+        if(article != null)
+            System.out.println(article);
     }
 
     public void displayAllArticles(){
@@ -141,6 +141,7 @@ public class ArticleService {
         article.setPrice(InputUtils.userDoubleInput());
         System.out.print("Please enter article's quantity : ");
         article.setQuantity(InputUtils.userIntInput());
+        article.setRestockDate(LocalDateTime.now());
     }
 
     public void setFoodArticle(FoodArticle article){

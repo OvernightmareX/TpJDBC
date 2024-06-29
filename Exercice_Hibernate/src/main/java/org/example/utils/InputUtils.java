@@ -18,11 +18,11 @@ public class InputUtils {
         int month;
         int year;
 
-        System.out.print("Please enter the day of arrival : ");
+        System.out.print("Please enter the day : ");
         day = userRangeIntInput(MIN_DAY_DATE, MAX_DAY_DATE);
-        System.out.print("Please enter the month of arrival : ");
+        System.out.print("Please enter the month : ");
         month = userRangeIntInput(MIN_MONTH_DATE, MAX_MONTH_DATE);
-        System.out.print("Please enter the year of arrival : ");
+        System.out.print("Please enter the year : ");
         year = userRangeIntInput(MIN_YEAR_DATE, MAX_YEAR_DATE);
 
         return LocalDate.of(year, month, day);

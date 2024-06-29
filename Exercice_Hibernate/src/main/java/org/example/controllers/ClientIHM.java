@@ -15,11 +15,11 @@ public class ClientIHM {
         do {
             userChoice = displayClientCRUDMenu();
             switch (userChoice) {
-                //case 1 -> clientService.createArticle();
-                //case 2 -> clientService.modificationArticle();
-                //case 3 -> clientService.deleteArticle();
-                //case 4 -> clientService.displayArticleByID();
-                //case 5 -> clientService.displayAllArticles();
+                case 1 -> clientService.createClient();
+                case 2 -> clientService.modificationArticle();
+                case 3 -> clientService.deleteArticle();
+                case 4 -> clientService.displayClientByID();
+                case 5 -> clientService.displayAllClient();
             }
         } while (userChoice != 0);
     }

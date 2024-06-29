@@ -8,6 +8,7 @@ public class StoreIHM {
     public void StartStore(){
         int userChoice;
         ArticlesIHM articlesIHM = new ArticlesIHM();
+        ClientIHM clientIHM = new ClientIHM();
 
         do {
             displayMainMenu();
@@ -16,6 +17,7 @@ public class StoreIHM {
 
             switch (userChoice) {
                 case 1 -> articlesIHM.StartArticleIHM();
+                case 2 -> clientIHM.StartClientIHM();
             }
         } while (userChoice != 0);
 
