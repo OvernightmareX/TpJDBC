@@ -102,7 +102,7 @@ public class SaleService {
 
         do {
             articleService.displayAllArticles();
-            selectedArticle = articleService.selectArticleByID();
+            selectedArticle = articleService.getArticleByID();
             if(selectedArticle == null)
                 return;
 
@@ -146,7 +146,7 @@ public class SaleService {
 
     public void displaySalesByArticle(){
         List<SaleLine> saleLines = selectAllSaleLines();
-        List<Article> articles = articleService.selectAllArticles();
+        List<Article> articles = articleService.getAllArticles();
 
         if(saleLines == null || articles == null)
             return;

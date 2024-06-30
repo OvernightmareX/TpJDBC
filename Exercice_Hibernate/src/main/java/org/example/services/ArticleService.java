@@ -14,36 +14,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleService {
-
     private ArticleRepository articleRepository = new ArticleRepository();
 
     public void createArticle(){
         System.out.println("=== Article creation ===\n");
         TypeArticle typeArticle = selectArticleType();
 
-        Article article = switch (typeArticle){
-            case FOOD -> new FoodArticle();
-            case ELECTRONIC -> new ElectronicArticle();
-            case FASHION -> new FashionArticle();
-        };
-
-        setBaseArticle(article);
-
-        switch (typeArticle){
-            case FOOD -> setFoodArticle((FoodArticle) article);
-            case ELECTRONIC -> setElectronicArticle((ElectronicArticle) article);
-            case FASHION -> setFashionArticle((FashionArticle) article);
-        }
+        Article article = createSpecificArticleType(typeArticle);
+        setBaseArticleDetails(article);
+        setSpecificArticleDetails(article);
 
         saveArticle(article);
     }
 
+    private static Article createSpecificArticleType(TypeArticle typeArticle) {
+        return switch (typeArticle){
+            case FOOD -> new FoodArticle();
+            case ELECTRONIC -> new ElectronicArticle();
+            case FASHION -> new FashionArticle();
+        };
+    }
+
     public void restockArticleByID(){
         System.out.println("\n=== Article to restock ===\n");
-
         displayAllArticles();
 
-        Article articleSelected = selectArticleByID();
+        Article articleSelected = getArticleByID();
         if(articleSelected == null)
             return;
 
@@ -57,125 +53,85 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-    public void modificationArticle(){
-        System.out.println("=== Article modification ===\n");
-        int userInput;
-
-        displayAllArticles();
-
-        Article articleSelected = selectArticleByID();
-        if(articleSelected == null)
-            return;
-
-        do {
-            System.out.println("\n=== Selected article infos ===");
-            displayBaseArticleModificationMenu(articleSelected);
-            displaySpecificArticleModificationMenu(articleSelected);
-            System.out.println("0. Quit modifications\n");
-            System.out.print("Your choice : ");
-            userInput = InputUtils.userRangeIntInput(0, 6);
-
-            if(userInput != 0)
-                modificationArticleValue(articleSelected, userInput);
-
-        }while (userInput != 0);
-    }
-
     public void deleteArticle(){
         System.out.println("=== Article modification ===\n");
 
         displayAllArticles();
 
-        Article articleSelected = selectArticleByID();
+        Article articleSelected = getArticleByID();
         if(articleSelected == null)
             return;
 
         articleRepository.delete(articleSelected);
     }
 
-    public void displayArticleByID(){
-        Article article = selectArticleByID();
-        if(article != null)
-            System.out.println(article);
-    }
+    public void modifyArticle(){
+        System.out.println("=== Article modification ===\n");
 
-    public void displayAllArticles(){
-        List<Article> articles = selectAllArticles();
-        if(articles == null)
+        displayAllArticles();
+
+        Article articleSelected = getArticleByID();
+        if(articleSelected == null)
             return;
 
-        for(Article article : articles){
-            System.out.println(article);
-        }
+        int userInput;
+        do {
+            System.out.println("\n=== Selected article infos ===");
+            displayArticleModificationMenu(articleSelected);
+            System.out.println("0. Quit modifications\n");
+            System.out.print("Your choice : ");
+            userInput = InputUtils.userRangeIntInput(0, 6);
+
+            if(userInput != 0)
+                modifyArticleValue(articleSelected, userInput);
+
+        }while (userInput != 0);
     }
 
-    public void modificationArticleValue(Article article, int inputToUpdate){
-        switch (inputToUpdate){
-            case 1 :
-                System.out.print("Please enter article's name : ");
+    public void modifyArticleValue(Article article, int inputToUpdate){
+        switch (inputToUpdate) {
+            case 1 -> {
+                System.out.print("Please enter article's name: ");
                 article.setName(InputUtils.userStringInput());
-                break;
-            case 2 :
-                System.out.print("Please enter article's description : ");
+            }
+            case 2 -> {
+                System.out.print("Please enter article's description: ");
                 article.setDescription(InputUtils.userStringInput());
-                break;
-            case 3 :
-                System.out.print("Please enter article's price : ");
+            }
+            case 3 -> {
+                System.out.print("Please enter article's price: ");
                 article.setPrice(InputUtils.userDoubleInput());
-                break;
-            case 4 :
-                System.out.print("Please enter article's quantity : ");
+            }
+            case 4 -> {
+                System.out.print("Please enter article's quantity: ");
                 article.setQuantity(InputUtils.userIntInput());
                 article.setRestockDate(LocalDateTime.now());
-                break;
-            case 5 :
-                if (article.getClass().equals(FoodArticle.class)) {
-                    System.out.println("5. Please enter expiration date : ");
-                    ((FoodArticle) article).setExpirationDate(InputUtils.userDateInput());
-                } else if (article.getClass().equals(ElectronicArticle.class)) {
-                    System.out.println("5. Please enter battery duration : " + ((ElectronicArticle) article).getBatteryDuration());
-                    ((ElectronicArticle) article).setBatteryDuration(InputUtils.userIntInput());
-                } else if (article.getClass().equals(FashionArticle.class)) {
-                    System.out.println("5. Please enter size : " + ((FashionArticle) article).getSize());
-                    ((FashionArticle) article).setSize(InputUtils.userIntInput());
+            }
+            case 5 -> {
+                modifySpecificArticleValue(article);
+            }
+            case 6 -> {
+                if (article instanceof FashionArticle fashionArticle) {
+                    System.out.println("6. Please enter type: " + fashionArticle.getType());
+                    fashionArticle.setType(selectFashionArticleType());
                 }
-                break;
-            case 6 :
-                if (article.getClass().equals(FashionArticle.class)) {
-                    System.out.println("6. Please enter type : " + ((FashionArticle) article).getType());
-                    ((FashionArticle) article).setType(selectFashionArticleType());
-                }
-                break;
+            }
+            default -> throw new IllegalArgumentException("Invalid input to update");
         }
         saveArticle(article);
     }
 
-    public void setBaseArticle(Article article){
-        System.out.print("Please enter article's name : ");
-        article.setName(InputUtils.userStringInput());
-        System.out.print("Please enter article's description : ");
-        article.setDescription(InputUtils.userStringInput());
-        System.out.print("Please enter article's price : ");
-        article.setPrice(InputUtils.userDoubleInput());
-        System.out.print("Please enter article's quantity : ");
-        article.setQuantity(InputUtils.userIntInput());
-        article.setSaleLines(new ArrayList<>());
-    }
-
-    public void setFoodArticle(FoodArticle article){
-        System.out.print("Please enter article's expiration date : ");
-        article.setExpirationDate(InputUtils.userDateInput());
-    }
-
-    public void setElectronicArticle(ElectronicArticle article){
-        System.out.print("Please enter article's battery duration : ");
-        article.setBatteryDuration(InputUtils.userIntInput());
-    }
-
-    public void setFashionArticle(FashionArticle article){
-        System.out.print("Please enter article's size : ");
-        article.setSize(InputUtils.userIntInput());
-        article.setType(selectFashionArticleType());
+    private void modifySpecificArticleValue(Article article) {
+        if (article instanceof FoodArticle foodArticle) {
+            System.out.println("5. Please enter expiration date: " + foodArticle.getExpirationDate());
+            foodArticle.setExpirationDate(InputUtils.userDateInput());
+        } else if (article instanceof ElectronicArticle electronicArticle) {
+            System.out.println("5. Please enter battery duration: " + electronicArticle.getBatteryDuration());
+            electronicArticle.setBatteryDuration(InputUtils.userIntInput());
+        } else if (article instanceof FashionArticle fashionArticle) {
+            System.out.println("5. Please enter size: " + fashionArticle.getSize());
+            fashionArticle.setSize(InputUtils.userIntInput());
+        }
     }
 
     public TypeFashionArticle selectFashionArticleType(){
@@ -189,7 +145,7 @@ public class ArticleService {
             case 1 -> TypeFashionArticle.MEN;
             case 2 -> TypeFashionArticle.WOMEN;
             case 3 -> TypeFashionArticle.CHILD;
-            default -> throw new IllegalArgumentException("article type not allowed");
+            default -> throw new IllegalArgumentException("Invalid fashion article typ");
         };
     }
 
@@ -205,11 +161,11 @@ public class ArticleService {
             case 1 -> TypeArticle.ELECTRONIC;
             case 2 -> TypeArticle.FASHION;
             case 3 -> TypeArticle.FOOD;
-            default -> throw new IllegalArgumentException("article type not allowed");
+            default -> throw new IllegalArgumentException("Invalid article type");
         };
     }
 
-    public Article selectArticleByID(){
+    public Article getArticleByID(){
         System.out.println("Please enter article's ID : ");
         int userInput = InputUtils.userIntInput();
         Article article = articleRepository.findById(Article.class, userInput);
@@ -218,15 +174,14 @@ public class ArticleService {
             System.out.println("Article's ID not found");
             return null;
         }
-
         return article;
     }
 
-    public List<Article> selectAllArticles(){
+    public List<Article> getAllArticles(){
         List<Article> articles = articleRepository.findAll(Article.class);
 
         if(articles.isEmpty()){
-            System.out.println("No articles");
+            System.out.println("No articles found");
             return null;
         }
 
@@ -235,6 +190,65 @@ public class ArticleService {
 
     public long getArticleCount(){
         return articleRepository.count(Article.class);
+    }
+
+    private void setSpecificArticleDetails(Article article) {
+        if (article instanceof FoodArticle) {
+            setFoodArticleDetails((FoodArticle) article);
+        } else if (article instanceof ElectronicArticle) {
+            setElectronicArticleDetails((ElectronicArticle) article);
+        } else if (article instanceof FashionArticle) {
+            setFashionArticleDetails((FashionArticle) article);
+        }
+    }
+
+    public void setBaseArticleDetails(Article article){
+        System.out.print("Please enter article's name : ");
+        article.setName(InputUtils.userStringInput());
+        System.out.print("Please enter article's description : ");
+        article.setDescription(InputUtils.userStringInput());
+        System.out.print("Please enter article's price : ");
+        article.setPrice(InputUtils.userDoubleInput());
+        System.out.print("Please enter article's quantity : ");
+        article.setQuantity(InputUtils.userIntInput());
+        article.setSaleLines(new ArrayList<>());
+    }
+
+    public void setFoodArticleDetails(FoodArticle article){
+        System.out.print("Please enter article's expiration date : ");
+        article.setExpirationDate(InputUtils.userDateInput());
+    }
+
+    public void setElectronicArticleDetails(ElectronicArticle article){
+        System.out.print("Please enter article's battery duration : ");
+        article.setBatteryDuration(InputUtils.userIntInput());
+    }
+
+    public void setFashionArticleDetails(FashionArticle article){
+        System.out.print("Please enter article's size : ");
+        article.setSize(InputUtils.userIntInput());
+        article.setType(selectFashionArticleType());
+    }
+
+    public void displayArticleByID(){
+        Article article = getArticleByID();
+        if(article != null)
+            System.out.println(article);
+    }
+
+    public void displayAllArticles(){
+        List<Article> articles = getAllArticles();
+        if(articles == null)
+            return;
+
+        for(Article article : articles){
+            System.out.println(article);
+        }
+    }
+
+    private static void displayArticleModificationMenu(Article articleSelected) {
+        displayBaseArticleModificationMenu(articleSelected);
+        displaySpecificArticleModificationMenu(articleSelected);
     }
 
     public static void displayBaseArticleModificationMenu(Article article){
@@ -254,4 +268,7 @@ public class ArticleService {
             System.out.println("6. Type : " + ((FashionArticle) article).getType());
         }
     }
+
+
+
 }

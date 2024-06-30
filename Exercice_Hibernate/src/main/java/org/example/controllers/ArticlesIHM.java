@@ -16,7 +16,7 @@ public class ArticlesIHM {
             userChoice = displayArticleCRUDMenu();
             switch (userChoice) {
                 case 1 -> articleService.createArticle();
-                case 2 -> articleService.modificationArticle();
+                case 2 -> articleService.modifyArticle();
                 case 3 -> articleService.deleteArticle();
                 case 4 -> articleService.displayArticleByID();
                 case 5 -> articleService.displayAllArticles();
