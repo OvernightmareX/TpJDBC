@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.example.utils.TypeFashionArticle;
 
-import java.time.LocalDate;
-
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

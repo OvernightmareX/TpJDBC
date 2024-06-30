@@ -17,7 +17,7 @@ public class CustomerRepository extends BaseRepository<Customer>{
             query.setParameter("customerID", customer_id);
             return query.getResultList();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return null;
         }
     }

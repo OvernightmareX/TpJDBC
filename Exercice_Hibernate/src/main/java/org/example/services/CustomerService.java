@@ -1,6 +1,7 @@
 package org.example.services;
 
-import org.example.entities.*;
+import org.example.entities.Customer;
+import org.example.entities.Sale;
 import org.example.repositories.CustomerRepository;
 import org.example.utils.InputUtils;
 

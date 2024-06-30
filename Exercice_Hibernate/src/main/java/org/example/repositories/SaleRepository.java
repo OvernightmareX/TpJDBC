@@ -14,7 +14,7 @@ public class SaleRepository extends BaseRepository<Sale> {
             Query query = session.createQuery(queryString, Sale.class);
             return query.getResultList();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             return null;
         }
     }

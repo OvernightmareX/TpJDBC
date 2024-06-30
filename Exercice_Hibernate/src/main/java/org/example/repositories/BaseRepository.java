@@ -1,10 +1,9 @@
 package org.example.repositories;
 
 import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
+import org.example.utils.SessionFactorySingleton;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.example.utils.SessionFactorySingleton;
 
 import java.util.List;
 

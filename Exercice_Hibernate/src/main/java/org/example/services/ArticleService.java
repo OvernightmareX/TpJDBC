@@ -1,6 +1,9 @@
 package org.example.services;
 
-import org.example.entities.*;
+import org.example.entities.Article;
+import org.example.entities.ElectronicArticle;
+import org.example.entities.FashionArticle;
+import org.example.entities.FoodArticle;
 import org.example.repositories.ArticleRepository;
 import org.example.utils.InputUtils;
 import org.example.utils.TypeArticle;

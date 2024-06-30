@@ -12,7 +12,6 @@ import org.example.utils.TypeSale;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SaleService {
     private SaleRepository saleRepository = new SaleRepository();
