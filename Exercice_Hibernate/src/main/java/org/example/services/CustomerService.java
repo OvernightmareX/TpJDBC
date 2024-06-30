@@ -15,85 +15,64 @@ public class CustomerService {
         System.out.println("=== Customer creation ===\n");
 
         Customer customer = new Customer();
-        setCustomer(customer);
+        setCustomerDetails(customer);
 
-        customerRepository.save(customer);
+        saveCustomer(customer);
         return customer;
     }
 
-    public void modificationCustomer(){
+    public void modifyCustomer(){
         System.out.println("=== Customer modification ===\n");
-        int userInput;
-
         displayAllCustomer();
 
-        Customer customerSelected = selectCustomerByID();
+        Customer customerSelected = getCustomerByID();
         if(customerSelected == null)
             return;
 
+        int userInput;
         do {
             System.out.println("\n=== Selected customer's infos ===");
             displayCustomerModificationMenu(customerSelected);
             System.out.print("Your choice : ");
-            userInput = InputUtils.userRangeIntInput(0, 6);
-            if(userInput != 0)
-                modificationCustomerValue(customerSelected, userInput);
+            userInput = InputUtils.userRangeIntInput(0, 2);
 
+            if(userInput != 0)
+                modifyCustomerValue(customerSelected, userInput);
         }while (userInput != 0);
     }
 
-    public void deleteArticle(){
-        System.out.println("\n=== Customer modification ===\n");
+    public void deleteCustomer(){
+        System.out.println("\n=== Customer deletion ===\n");
 
         displayAllCustomer();
 
-        Customer customerSelected = selectCustomerByID();
+        Customer customerSelected = getCustomerByID();
         if(customerSelected == null)
             return;
 
         customerRepository.delete(customerSelected);
     }
 
-    public void displayCustomerByID(){
-        Customer customer = selectCustomerByID();
-        if(customer != null)
-            System.out.println(customer);
-    }
-
-    public void displayAllCustomer(){
-        List<Customer> customers = selectAllCustomers();
-        if(customers == null)
-            return;
-
-        for(Customer customer : customers){
-            System.out.println(customer);
-        }
-    }
-
     public void selectCustomerHistory(){
         displayAllCustomer();
-        Customer customer = selectCustomerByID();
+        Customer customer = getCustomerByID();
         if(customer == null)
             return;
 
         displayCustomerHistory(customer.getId_customer());
     }
 
-    public void displayCustomerHistory(int id_customer){
-        List<Sale> sales= customerRepository.findAllSalesByCustomerID(id_customer);
-        System.out.println(sales);
-    }
-
-    public void modificationCustomerValue(Customer customer, int inputToUpdate){
-        switch (inputToUpdate){
-            case 1 :
-                System.out.print("Please enter customer's name : ");
+    public void modifyCustomerValue(Customer customer, int inputToUpdate){
+        switch (inputToUpdate) {
+            case 1 -> {
+                System.out.print("Please enter customer's name: ");
                 customer.setName(InputUtils.userStringInput());
-                break;
-            case 2 :
-                System.out.print("Please enter customer's email : ");
+            }
+            case 2 -> {
+                System.out.print("Please enter customer's email: ");
                 customer.setEmail(InputUtils.userStringInput());
-                break;
+            }
+            default -> throw new IllegalArgumentException("Invalid input for customer modification");
         }
         saveCustomer(customer);
     }
@@ -102,7 +81,7 @@ public class CustomerService {
         customerRepository.save(customer);
     }
 
-    public void setCustomer(Customer customer){
+    public void setCustomerDetails(Customer customer){
         System.out.print("Please enter customer's name : ");
         customer.setName(InputUtils.userStringInput());
         System.out.print("Please enter customer's email : ");
@@ -110,20 +89,18 @@ public class CustomerService {
         customer.setPurchasingHistory(new ArrayList<>());
     }
 
-    public Customer selectCustomerByID(){
+    public Customer getCustomerByID(){
         System.out.print("Please enter customer's ID : ");
         int userInput = InputUtils.userIntInput();
         Customer customer = customerRepository.findById(Customer.class, userInput);
 
-        if(customer == null){
+        if(customer == null)
             System.out.println("Customer's ID not found");
-            return null;
-        }
 
         return customer;
     }
 
-    public List<Customer> selectAllCustomers(){
+    public List<Customer> getAllCustomers(){
         List<Customer> customers = customerRepository.findAll(Customer.class);
 
         if(customers.isEmpty()){
@@ -138,9 +115,28 @@ public class CustomerService {
         return customerRepository.count(Customer.class);
     }
 
+    public void displayCustomerByID(){
+        Customer customer = getCustomerByID();
+        if(customer != null)
+            System.out.println(customer);
+    }
+
+    public void displayAllCustomer(){
+        List<Customer> customers = getAllCustomers();
+        if(customers == null)
+            return;
+
+        System.out.println(customers);
+    }
+
     public static void displayCustomerModificationMenu(Customer customer){
         System.out.println("\n1. Name : " + customer.getName());
         System.out.println("2. Email : " + customer.getEmail());
         System.out.println("0. Quit modifications\n");
+    }
+
+    public void displayCustomerHistory(int id_customer){
+        List<Sale> sales= customerRepository.findAllSalesByCustomerID(id_customer);
+        System.out.println(sales);
     }
 }

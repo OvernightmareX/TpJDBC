@@ -88,7 +88,7 @@ public class SaleService {
         if(userInput == 0)
             return customerService.createCustomer();
         else
-            return customerService.selectCustomerByID();
+            return customerService.getCustomerByID();
     }
 
     private void selectArticle(List<SaleLine> saleLines, Sale sale){
@@ -162,7 +162,7 @@ public class SaleService {
     }
 
     public void displaySalesByCustomer(){
-        List<Customer> customers = customerService.selectAllCustomers();
+        List<Customer> customers = customerService.getAllCustomers();
         for (Customer customer : customers){
             System.out.println("Sales with the customer \""+customer.getName()+"\" : ");
             System.out.println(customer.getPurchasingHistory());

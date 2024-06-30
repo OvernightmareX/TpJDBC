@@ -15,8 +15,8 @@ public class CustomerIHM {
             userChoice = displayCustomerCRUDMenu();
             switch (userChoice) {
                 case 1 -> customerService.createCustomer();
-                case 2 -> customerService.modificationCustomer();
-                case 3 -> customerService.deleteArticle();
+                case 2 -> customerService.modifyCustomer();
+                case 3 -> customerService.deleteCustomer();
                 case 4 -> customerService.displayCustomerByID();
                 case 5 -> customerService.selectCustomerHistory();
                 case 6 -> customerService.displayAllCustomer();

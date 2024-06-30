@@ -54,7 +54,7 @@ public class ArticleService {
     }
 
     public void deleteArticle(){
-        System.out.println("=== Article modification ===\n");
+        System.out.println("=== Article deletion ===\n");
 
         displayAllArticles();
 
