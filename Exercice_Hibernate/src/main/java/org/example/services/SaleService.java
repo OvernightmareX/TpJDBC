@@ -21,12 +21,11 @@ public class SaleService {
 
     public void createSale(){
         System.out.println("\n=== Sale registration ===\n");
-        int userInput;
-
         Customer currentCustomer = null;
         List<SaleLine> saleLines = new ArrayList<>();
         Sale sale = new Sale();
 
+        int userInput;
         do {
             displayCurrentCustomer(currentCustomer);
             displaySelectedArticles(saleLines);
@@ -44,97 +43,90 @@ public class SaleService {
             return;
         }
 
+        finalizeSale(sale, currentCustomer, saleLines);
+    }
+
+    private void finalizeSale(Sale sale, Customer currentCustomer, List<SaleLine> saleLines) {
         sale.setSaleLines(saleLines);
         sale.setCustomer(currentCustomer);
         sale.setSaleDate(LocalDate.now());
         TypeSale typeSale = selectSaleType(sale);
         sale.setTypeSale(typeSale);
         saleRepository.save(sale);
-        for(SaleLine saleLine : saleLines)
-        {
+
+        for (SaleLine saleLine : saleLines) {
             saleLineRepository.save(saleLine);
-            if(typeSale == TypeSale.DONE) {
+            if (typeSale == TypeSale.DONE) {
                 Article article = saleLine.getArticle();
                 article.setQuantity(article.getQuantity() - saleLine.getQuantity());
                 articleService.saveArticle(article);
             }
         }
 
-        List<Sale> sales = currentCustomer.getPurchasingHistory();
-        sales.add(sale);
-        currentCustomer.setPurchasingHistory(sales);
+        currentCustomer.getPurchasingHistory().add(sale);
         customerService.saveCustomer(currentCustomer);
     }
 
     private Customer selectCustomer(){
-        int userInput;
-        int userInputMax;
-        long customerCount = customerService.getCustomerCount();
-
+        int maxChoice = 0;
         customerService.displayAllCustomer();
         System.out.println("\nYour customer is in the list ?");
         System.out.println("0. No (create a new customer)");
 
-        if(customerCount == 0)
-            userInputMax = 0;
-        else {
-            userInputMax = 1;
+        if (customerService.getCustomerCount() > 0) {
             System.out.println("1. Yes");
+            maxChoice = 1;
         }
 
         System.out.print("\nYour choice : ");
-        userInput = InputUtils.userRangeIntInput(0,userInputMax);
+        int userInput = InputUtils.userRangeIntInput(0,maxChoice);
 
-        if(userInput == 0)
-            return customerService.createCustomer();
-        else
-            return customerService.getCustomerByID();
+        return userInput == 0 ? customerService.createCustomer() : customerService.getCustomerByID();
     }
 
     private void selectArticle(List<SaleLine> saleLines, Sale sale){
-        Article selectedArticle;
-        SaleLine saleLine = new SaleLine();
-
         if(articleService.getArticleCount() == 0){
             System.out.println("No articles available");
             return;
         }
 
+        Article selectedArticle;
         do {
             articleService.displayAllArticles();
             selectedArticle = articleService.getArticleByID();
             if(selectedArticle == null)
                 return;
 
-            if(selectedArticle.getQuantity() == 0){
+            if(selectedArticle.getQuantity() == 0)
                 System.out.println("Your selected article is out of stock.");
-                continue;
-            }
-            break;
-        }while (true);
 
+        }while (selectedArticle.getQuantity() == 0);
+
+        addSaleLine(saleLines, sale, selectedArticle);
+    }
+
+    private void addSaleLine(List<SaleLine> saleLines, Sale sale, Article selectedArticle) {
+        SaleLine saleLine = new SaleLine();
         saleLine.setArticle(selectedArticle);
-        System.out.print("Please enter a quantity : ");
+        System.out.print("Please enter a quantity: ");
         saleLine.setQuantity(InputUtils.userRangeIntInput(1, selectedArticle.getQuantity()));
         saleLine.setSale(sale);
 
-        saleLines.removeIf(saleLine1 -> saleLine1.getArticle().equals(saleLine.getArticle()));
+        saleLines.removeIf(line -> line.getArticle().equals(saleLine.getArticle()));
         saleLines.add(saleLine);
     }
 
     private static TypeSale selectSaleType(Sale sale){
-        int userChoice;
         System.out.println("\n=== Order resume ===\n");
-
         System.out.println("Customer : " + sale.getCustomer().getName() +"\n");
         displayOrder(sale.getSaleLines());
 
         System.out.println("1. Confirm the order");
         System.out.println("2. Delay the order");
         System.out.println("3. Cancel the order\n");
-
         System.out.print("Your choice : ");
-        userChoice = InputUtils.userRangeIntInput(1,3);
+
+        int userChoice = InputUtils.userRangeIntInput(1,3);
 
         return switch (userChoice){
             case 1 -> TypeSale.DONE;
@@ -153,7 +145,6 @@ public class SaleService {
 
         for(Article article : articles){
             System.out.println("Sales with the article \""+article.getName()+"\" : ");
-
             for (SaleLine line : saleLines){
                 if(line.getArticle().equals(article))
                     System.out.println(line.getSale());
@@ -214,6 +205,7 @@ public class SaleService {
         double totalPrice;
         double totalOrderPrice = 0;
         System.out.println("Name\tQuantity\tPrice\tTotal price");
+
         for (SaleLine saleLine : saleLines){
             Article saleLineArticle = saleLine.getArticle();
             totalPrice = saleLine.getQuantity() * saleLineArticle.getPrice();
