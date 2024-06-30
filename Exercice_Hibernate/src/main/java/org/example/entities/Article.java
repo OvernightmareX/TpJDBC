@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @SuperBuilder
@@ -16,21 +17,29 @@ import java.time.LocalDateTime;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Article {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    int id_article;
-    String name;
-    String description;
-    double price;
-    int quantity;
-    LocalDateTime restockDate;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id_article;
+    private String name;
+    private String description;
+    private double price;
+    private int quantity;
+    private LocalDateTime restockDate;
+
+    @ManyToMany(mappedBy = "article")
+    private List<SaleLine> saleLines;
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+        this.restockDate = LocalDateTime.now();
+    }
 
     @Override
     public String toString() {
-        return "id=" + id_article +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", quantity=" + quantity +
-                ", restockDate=" + restockDate;
+        return "id=" + this.id_article +
+                ", name='" + this.name + '\'' +
+                ", description='" + this.description + '\'' +
+                ", price=" + this.price +
+                ", quantity=" + this.quantity +
+                ", restockDate=" + this.restockDate;
     }
 }

@@ -62,4 +62,13 @@ public abstract class BaseRepository<T> {
         session.close();
         return list;
     }
+
+    public long count(Class<T> classe){
+        String query = "SELECT COUNT(c) FROM " + classe.getSimpleName() +" c";
+        session = sessionFactory.openSession();
+        Query typedQuery = session.createQuery(query, Long.class);
+        long count = (long) typedQuery.getSingleResult();
+        session.close();
+        return count;
+    }
 }

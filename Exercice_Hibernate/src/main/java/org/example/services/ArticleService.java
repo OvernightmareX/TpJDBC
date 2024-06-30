@@ -1,15 +1,13 @@
 package org.example.services;
 
-import org.example.entities.Article;
-import org.example.entities.ElectronicArticle;
-import org.example.entities.FashionArticle;
-import org.example.entities.FoodArticle;
+import org.example.entities.*;
 import org.example.repositories.ArticleRepository;
 import org.example.utils.InputUtils;
 import org.example.utils.TypeArticle;
 import org.example.utils.TypeFashionArticle;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleService {
@@ -34,6 +32,25 @@ public class ArticleService {
             case FASHION -> setFashionArticle((FashionArticle) article);
         }
 
+        saveArticle(article);
+    }
+
+    public void restockArticleByID(){
+        System.out.println("\n=== Article to restock ===\n");
+
+        displayAllArticles();
+
+        Article articleSelected = selectArticleByID();
+        if(articleSelected == null)
+            return;
+
+        System.out.println(articleSelected);
+        System.out.print("What's the new quantity : ");
+        articleSelected.setQuantity(InputUtils.userIntInput());
+        saveArticle(articleSelected);
+    }
+
+    public void saveArticle(Article article){
         articleRepository.save(article);
     }
 
@@ -89,8 +106,6 @@ public class ArticleService {
         }
     }
 
-
-
     public void modificationArticleValue(Article article, int inputToUpdate){
         switch (inputToUpdate){
             case 1 :
@@ -129,7 +144,7 @@ public class ArticleService {
                 }
                 break;
         }
-        articleRepository.save(article);
+        saveArticle(article);
     }
 
     public void setBaseArticle(Article article){
@@ -141,7 +156,7 @@ public class ArticleService {
         article.setPrice(InputUtils.userDoubleInput());
         System.out.print("Please enter article's quantity : ");
         article.setQuantity(InputUtils.userIntInput());
-        article.setRestockDate(LocalDateTime.now());
+        article.setSaleLines(new ArrayList<>());
     }
 
     public void setFoodArticle(FoodArticle article){
@@ -158,7 +173,6 @@ public class ArticleService {
         System.out.print("Please enter article's size : ");
         article.setSize(InputUtils.userIntInput());
         article.setType(selectFashionArticleType());
-
     }
 
     public TypeFashionArticle selectFashionArticleType(){
@@ -214,6 +228,10 @@ public class ArticleService {
         }
 
         return articles;
+    }
+
+    public long getArticleCount(){
+        return articleRepository.count(Article.class);
     }
 
     public static void displayBaseArticleModificationMenu(Article article){

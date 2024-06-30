@@ -8,7 +8,8 @@ public class StoreIHM {
     public void StartStore(){
         int userChoice;
         ArticlesIHM articlesIHM = new ArticlesIHM();
-        ClientIHM clientIHM = new ClientIHM();
+        CustomerIHM customerIHM = new CustomerIHM();
+        SaleIHM saleIHM = new SaleIHM();
 
         do {
             displayMainMenu();
@@ -17,7 +18,8 @@ public class StoreIHM {
 
             switch (userChoice) {
                 case 1 -> articlesIHM.StartArticleIHM();
-                case 2 -> clientIHM.StartClientIHM();
+                case 2 -> customerIHM.StartCustomerIHM();
+                case 3 -> saleIHM.StartSaleIHM();
             }
         } while (userChoice != 0);
 
@@ -28,7 +30,7 @@ public class StoreIHM {
         System.out.println("\n=== Store manager ===\n");
         System.out.println("1. Manage articles");
         System.out.println("2. Manage clients");
-        System.out.println("3. Manage sells");
+        System.out.println("3. Manage sales");
         System.out.println("0. Quit");
     }
 }

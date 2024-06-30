@@ -10,6 +10,7 @@ public class InputUtils {
     public static String userStringInput() {
         Scanner sc = new Scanner(System.in);
         String name = sc.nextLine();
+        System.out.println();
         return name.trim();
     }
 
@@ -45,6 +46,7 @@ public class InputUtils {
             }
         } while (true);
 
+        System.out.println();
         return inputChoice;
     }
 
@@ -61,6 +63,7 @@ public class InputUtils {
             }
         } while (true);
 
+        System.out.println();
         return inputChoice;
     }
 

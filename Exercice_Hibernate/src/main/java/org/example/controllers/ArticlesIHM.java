@@ -20,6 +20,7 @@ public class ArticlesIHM {
                 case 3 -> articleService.deleteArticle();
                 case 4 -> articleService.displayArticleByID();
                 case 5 -> articleService.displayAllArticles();
+                case 6 -> articleService.restockArticleByID();
             }
         } while (userChoice != 0);
     }
@@ -31,6 +32,7 @@ public class ArticlesIHM {
         System.out.println("3. Delete");
         System.out.println("4. Display articles by ID");
         System.out.println("5. Display all articles");
+        System.out.println("6. Restock an article");
         System.out.println("0. Quit article manager\n");
 
         System.out.print("Your choice :");

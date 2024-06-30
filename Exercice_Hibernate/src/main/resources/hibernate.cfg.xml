@@ -7,6 +7,8 @@
         <mapping class="org.example.entities.ElectronicArticle"/>
         <mapping class="org.example.entities.FashionArticle"/>
         <mapping class="org.example.entities.FoodArticle"/>
-        <mapping class="org.example.entities.Client"/>
+        <mapping class="org.example.entities.Customer"/>
+        <mapping class="org.example.entities.Sale"/>
+        <mapping class="org.example.entities.SaleLine"/>
     </session-factory>
 </hibernate-configuration>
