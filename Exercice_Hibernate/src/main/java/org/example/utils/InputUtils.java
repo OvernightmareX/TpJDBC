@@ -10,8 +10,8 @@ public class InputUtils {
     private static final Scanner sc = new Scanner(System.in);
 
     public static String userStringInput() {
-        System.out.println();
-        return sc.nextLine().trim();
+        String string = sc.nextLine().trim();
+        return string;
     }
 
     public static LocalDate userDateInput() {
@@ -39,7 +39,6 @@ public class InputUtils {
     }
 
     public static int userIntInput() {
-        System.out.println();
         return getIntInput();
     }
 
@@ -57,7 +56,9 @@ public class InputUtils {
     private static int getIntInput() {
          do{
             try {
-                return sc.nextInt();
+                int value =  sc.nextInt();
+                sc.nextLine();
+                return value;
             } catch (InputMismatchException e) {
                 System.out.println("Not an integer. Please enter a valid number.");
                 sc.next();

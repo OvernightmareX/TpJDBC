@@ -210,7 +210,7 @@ public class SaleService {
             Article saleLineArticle = saleLine.getArticle();
             totalPrice = saleLine.getQuantity() * saleLineArticle.getPrice();
             totalOrderPrice += totalPrice;
-            System.out.println(saleLineArticle.getName() + " " + saleLine.getQuantity() + " " + saleLineArticle.getPrice() + " " + totalPrice) ;
+            System.out.println(saleLineArticle.getName() + "\t" + saleLine.getQuantity() + "\t\t\t" + saleLineArticle.getPrice() + "\t" + totalPrice) ;
         }
         System.out.println("\nTotal for order : " + totalOrderPrice);
     }

@@ -25,7 +25,7 @@ public abstract class Article {
     private int quantity;
     private LocalDateTime restockDate;
 
-    @ManyToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article")
     private List<SaleLine> saleLines;
 
     public void setQuantity(int quantity) {
