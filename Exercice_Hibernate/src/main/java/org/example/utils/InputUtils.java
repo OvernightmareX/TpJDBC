@@ -10,8 +10,7 @@ public class InputUtils {
     private static final Scanner sc = new Scanner(System.in);
 
     public static String userStringInput() {
-        String string = sc.nextLine().trim();
-        return string;
+        return sc.nextLine().trim();
     }
 
     public static LocalDate userDateInput() {
